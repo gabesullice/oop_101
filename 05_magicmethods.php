@@ -22,13 +22,18 @@ class element {
 
     echo ">";
 
-    foreach ($this->content as $line) {
-      if (is_object($line) && get_class($line) == 'element') {
-        $line->printElem();
+    if (is_array($this->content)) {
+      foreach ($this->content as $line) {
+        if (is_object($line) && get_class($line) == 'element') {
+          $line->printElem();
+        }
+        elseif (is_string($line)) {
+          echo $line;
+        }
       }
-      else {
-        echo $line;
-      }
+    }
+    elseif (is_string($this->content)) {
+      echo $this->content;
     }
 
     echo "</" . $this->type . ">\n";
@@ -42,16 +47,7 @@ class listClass {
   function __construct($name) {
     $this->name = $name;
 
-    $item = new element('li', array('First Content'), array('class' => array('first')));
-    $this->addItem($item);
-
-    for ($i = 0; $i < 6; $i++) {
-      $item = new element('li', array('Some Content'));
-      $this->addItem($item);
-    }
-
-    $item = new element('li', array('Last Content'), array('class' => array('last')));
-    $this->addItem($item);
+    $this->makeExample();
 
     return $list;
   }
@@ -60,8 +56,21 @@ class listClass {
     $this->items[] = $item;
   }
 
+  function makeExample() {
+    $item = new element('li', 'First Content', array('class' => array('first')));
+    $this->addItem($item);
+
+    for ($i = 0; $i < 6; $i++) {
+      $item = new element('li', 'Some Content');
+      $this->addItem($item);
+    }
+
+    $item = new element('li', 'Last Content', array('class' => array('last')));
+    $this->addItem($item);
+  }
+
   function printList() {
-    $h3 = new element('h3', array($this->name));
+    $h3 = new element('h3', $this->name);
     array_unshift($this->items, $h3);
     $ul = new element('ul', $this->items);
     $ul->printElem();
