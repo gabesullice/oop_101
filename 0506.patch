@@ -1,0 +1,82 @@
+diff --git a/05_magicmethods.php b/06_inheritance.php
+index c5cf625..f6e98f5 100644
+--- a/05_magicmethods.php
++++ b/06_inheritance.php
+@@ -24,7 +24,7 @@ class element {
+ 
+     if (is_array($this->content)) {
+       foreach ($this->content as $line) {
+-        if (is_object($line) && get_class($line) == 'element') {
++        if (is_object($line) && is_a($line, 'element')) {
+           $line->printElem();
+         }
+         elseif (is_string($line)) {
+@@ -40,12 +40,22 @@ class element {
+   }
+ }
+ 
+-class listClass {
++class li extends element {
++  function __construct($content = NULL, $attr = NULL) {
++    $this->type = 'li';
++    $this->content = $content;
++    $this->attr = $attr;
++  }
++}
++
++class ul extends element {
+   var $name;
+-  var $items;
+ 
+-  function __construct($name) {
++  function __construct($name, $attr = NULL) {
+     $this->name = $name;
++    $this->type = 'ul';
++    $this->attr = $attr;
++    $this->content[] = new element('h3', $this->name);
+ 
+     $this->makeExample();
+ 
+@@ -53,34 +63,27 @@ class listClass {
+   }
+ 
+   function addItem($item) {
+-    $this->items[] = $item;
++    $this->content[] = $item;
+   }
+ 
+   function makeExample() {
+-    $item = new element('li', 'First Content', array('class' => array('first')));
++    $item = new li('First Content', array('class' => array('first')));
+     $this->addItem($item);
+ 
+     for ($i = 0; $i < 6; $i++) {
+-      $item = new element('li', 'Some Content');
++      $item = new li('Some Content');
+       $this->addItem($item);
+     }
+ 
+-    $item = new element('li', 'Last Content', array('class' => array('last')));
++    $item = new li('Last Content', array('class' => array('last')));
+     $this->addItem($item);
+   }
+-
+-  function printList() {
+-    $h3 = new element('h3', $this->name);
+-    array_unshift($this->items, $h3);
+-    $ul = new element('ul', $this->items);
+-    $ul->printElem();
+-  }
+ }
+ 
+-$firstList = new listClass('My first list object');
+-$secondList = new listClass('My second list object');
++$firstList = new ul('My first list object');
++$secondList = new ul('My second list object');
+ 
+-$firstList->printList();
+-$secondList->printList();
++$firstList->printElem();
++$secondList->printElem();
+ 
+ ?>

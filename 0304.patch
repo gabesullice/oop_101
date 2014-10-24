@@ -1,0 +1,101 @@
+diff --git a/03_objectoriented.php b/04_datatypes.php
+index 88afa60..9cf2cb9 100644
+--- a/03_objectoriented.php
++++ b/04_datatypes.php
+@@ -1,27 +1,55 @@
+ <?php
+ 
++class element {
++  var $type;
++  var $attr; // array of arrays, keyed by attribute name (e.g. array('class' => array('one', 'two'))
++  var $content; // array of content, either string or element.
++
++  function printElem() {
++    echo "<" . $this->type . " ";
++
++    if (isset($this->attr)) {
++      foreach ($this->attr as $name => $values) {
++        echo $name . "=\"" . implode(' ', $values)  . "\" ";
++      }
++    }
++
++    echo ">";
++
++    foreach ($this->content as $line) {
++      if (is_object($line) && get_class($line) == 'element') {
++        $line->printElem();
++      }
++      else {
++        echo $line;
++      }
++    }
++
++    echo "</" . $this->type . ">\n";
++  }
++}
++
+ class listClass {
+   var $name;
+   var $items;
+ 
+-  function addItem($content, $class = FALSE) {
+-    $this->items[] = array(
+-      'content' => $content,
+-      'class' => $class,
+-    );
++  function addItem($item) {
++    $this->items[] = $item;
+   }
+ 
+   function printList() {
+-    echo "<ul>";
+-    echo "<h3>" . $this->name . "</h3>";
++    $ul = new element;
++    $ul->type = 'ul';
+ 
+-    foreach ($this->items as $item) {
+-      $li = ($item['class']) ? "<li class=\"" . $item['class'] . "\">" : "<li>";
+-      $li .= $item['content'] . "</li>";
+-      echo $li;
+-    }
++    $h3 = new element;
++    $h3->type = 'h3';
++    $h3->content = array($this->name);
++
++    array_unshift($this->items, $h3);
+ 
+-    echo "</ul>";
++    $ul->content = $this->items;
++
++    $ul->printElem();
+   }
+ }
+ 
+@@ -29,11 +57,24 @@ function makeList($name) {
+   $list = new listClass;
+   $list->name = $name;
+ 
+-  $list->addItem('First Content', 'first');
++  $item = new element;
++  $item->type = 'li';
++  $item->attr = array('class' => array('first'));
++  $item->content = array('First Content');
++  $list->addItem($item);
++
+   for ($i = 0; $i < 6; $i++) {
+-    $list->addItem('Some Content');
++    $item = new element;
++    $item->type = 'li';
++    $item->content = array('Some Content');
++    $list->addItem($item);
+   }
+-  $list->addItem('Last Content', 'last');
++
++  $item = new element;
++  $item->type = 'li';
++  $item->attr = array('class' => array('last'));
++  $item->content = array('Last Content');
++  $list->addItem($item);
+ 
+   return $list;
+ }
