@@ -9,6 +9,8 @@ abstract class element {
     if ($attr) $this->addAttr($attr);
   }
 
+  abstract protected function type();
+
   public function addContent($content) {
     if (is_array($content)) {
       foreach ($content as $item) {
@@ -25,11 +27,11 @@ abstract class element {
   }
 
   public function render() {
-    $type = $this->type;
+    $type = $this->type();
     $attr = $this->renderAttr();
     $content = $this->renderContent();
 
-    return sprintf("<%s %s>%s</%s>\n",
+    return sprintf("<%s%s>%s</%s>\n",
       $type,
       $attr,
       $content,
@@ -41,10 +43,10 @@ abstract class element {
     $content = "";
     foreach ($this->content as $item) {
       if (is_object($item) && is_a($item, 'element')) {
-        $content .= $line->render();
+        $content .= $item->render();
       }
       elseif (is_string($item)) {
-        $content .= $line;
+        $content .= $item;
       }
     }
     return $content;
@@ -54,7 +56,7 @@ abstract class element {
     $content = "";
     if (isset($this->attr)) {
       foreach ($this->attr as $name => $values) {
-        $content .= sprintf("%s=\"%s\" ",
+        $content .= sprintf(" %s=\"%s\" ",
           $name,
           implode(' ', $values)
         );
@@ -65,16 +67,22 @@ abstract class element {
 }
 
 class h3 extends element {
-  static protected $type = 'h3'; 
+  protected $type = 'h3'; 
+
+  protected function type() { return $this->type; }
 }
 
 class li extends element {
-  static protected $type = 'li'; 
+  protected $type = 'li'; 
+
+  protected function type() { return $this->type; }
 }
 
 class ul extends element {
-  static protected $type = 'ul';
+  protected $type = 'ul';
   protected $name;
+
+  protected function type() { return $this->type; }
 
   function __construct($name, $attr = NULL) {
     $this->setName($name);
@@ -113,7 +121,7 @@ class ul extends element {
 $firstList = new ul('My first list object');
 $secondList = new ul('My second list object');
 
-$firstList->render();
-$secondList->render();
+echo $firstList->render();
+echo $secondList->render();
 
 ?>
