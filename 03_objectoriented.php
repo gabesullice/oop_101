@@ -42,9 +42,11 @@ class listClass {
   var $items; // This too.
 
   /**
-   * Thie is a method.
-   * 
+   * This is a method.
+   *
    * We call it a method because it is defined within the context of a class.
+   * @param $content
+   * @param bool $class
    */
   function addItem($content, $class = FALSE) {
     /**
@@ -55,7 +57,7 @@ class listClass {
      * 
      * Note that $content and $class are simply variables, not properties. They
      * are defined within the scope of a functions and are only accessible
-     * witin the function body.
+     * within the function body.
      */
     $this->items[] = array( 
       'content' => $content,
@@ -85,6 +87,8 @@ class listClass {
 /**
  * This is a simple function. Not a method. That's because it is outside the
  * class definition.
+ * @param $name
+ * @return \listClass
  */
 function makeList($name) {
   /**
@@ -96,9 +100,9 @@ function makeList($name) {
    * 
    * object:class :: node:content_type
    */
-  $list = new listClass; // We assing our new listClass object to the var $list.
+  $list = new listClass(); // We passing our new listClass object to the var $list.
 
-  // Now we can access properites of our object with the -> operator
+  // Now we can access properties of our object with the -> operator
   $list->name = $name;
 
   // To call a method, you need to access it with the -> operator too.
