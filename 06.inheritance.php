@@ -11,6 +11,10 @@ class element {
     $this->attr = $attr;
   }
 
+  function addItem($item) {
+    $this->content[] = $item;
+  }
+
   function printElem() {
     echo "<" . $this->type . " ";
 
@@ -42,9 +46,7 @@ class element {
 
 class li extends element {
   function __construct($content = NULL, $attr = NULL) {
-    $this->type = 'li';
-    $this->content = $content;
-    $this->attr = $attr;
+    parent::__construct('li', $content, $attr);
   }
 }
 
@@ -53,17 +55,8 @@ class ul extends element {
 
   function __construct($name, $attr = NULL) {
     $this->name = $name;
-    $this->type = 'ul';
-    $this->attr = $attr;
-    $this->content[] = new element('h3', $this->name);
-
+    parent::__construct('li', array(new element('h3', $this->name)), $attr);
     $this->makeExample();
-
-    return $list;
-  }
-
-  function addItem($item) {
-    $this->content[] = $item;
   }
 
   function makeExample() {
