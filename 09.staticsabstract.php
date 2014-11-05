@@ -79,7 +79,7 @@ class li extends element {
 }
 
 class ul extends element {
-  protected static $type = 'li';
+  protected static $type = 'ul';
   protected $name;
 
   public static function type() { return self::$type; }
