@@ -9,7 +9,7 @@ abstract class element {
     if ($attr) $this->addAttr($attr);
   }
 
-  abstract protected function type();
+  abstract public static function type();
 
   public function addContent($content) {
     if (is_array($content)) {
@@ -67,22 +67,22 @@ abstract class element {
 }
 
 class h3 extends element {
-  protected $type = 'h3'; 
+  protected static $type = 'h3';
 
-  protected function type() { return $this->type; }
+  public static function type() { return self::$type; }
 }
 
 class li extends element {
-  protected $type = 'li'; 
+  protected static $type = 'li';
 
-  protected function type() { return $this->type; }
+  public static function type() { return self::$type; }
 }
 
 class ul extends element {
-  protected $type = 'ul';
+  protected static $type = 'li';
   protected $name;
 
-  protected function type() { return $this->type; }
+  public static function type() { return self::$type; }
 
   function __construct($name, $attr = NULL) {
     $this->setName($name);
@@ -123,5 +123,7 @@ $secondList = new ul('My second list object');
 
 echo $firstList->render();
 echo $secondList->render();
+
+echo "<br><br>" . ul::type();
 
 ?>
